@@ -69,7 +69,21 @@ cd workers
 wrangler deploy
 ```
 
-3. Update the proxy URL in `frontend/package.json` to your deployed worker URL
+3. **Configure Proxy Settings:**
+
+   The frontend uses a proxy configuration in `package.json` to route API calls to the Cloudflare Worker:
+   ```json
+   "proxy": "https://compile-sql.issa-kabir98.workers.dev"
+   ```
+
+   **Options:**
+   - **Use deployed worker**: Keep the current proxy URL (recommended for production)
+   - **Use local development**: Change to `"proxy": "http://localhost:8787"` and run:
+     ```bash
+     cd workers
+     wrangler dev
+     ```
+   - **Update to your worker**: Replace with your deployed worker URL after running `wrangler deploy`
 
 ## 💡 Example Queries
 
@@ -101,13 +115,15 @@ Try asking questions like:
 The movies table includes these key columns:
 - `Series_Title` - Movie title
 - `Released_Year` - Release year
+- `Certificate` - Content rating/certification
+- `Runtime` - Duration in minutes
 - `IMDB_Rating` - Rating (1-10 scale)
-- `Genre` - Movie categories
+- `Overview` - Plot summary/description
+- `Meta_score` - Metacritic score
 - `Director` - Director name
 - `Star1, Star2, Star3, Star4` - Main cast
-- `Runtime` - Duration in minutes
+- `No_of_Votes` - Number of user votes
 - `Gross` - Box office earnings
-- `Meta_score` - Metacritic score
 
 ## 🔒 Security Features
 
