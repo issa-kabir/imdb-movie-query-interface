@@ -44,6 +44,8 @@ The application uses the **IMDB Top 1000 Movies** dataset containing:
 - Box office gross earnings and vote counts
 - Plot overviews and Metacritic scores
 
+**Dataset Source**: [IMDB Dataset of Top 1000 Movies and TV Shows](https://www.kaggle.com/datasets/harshitshankhdhar/imdb-dataset-of-top-1000-movies-and-tv-shows/data) on Kaggle
+
 ## 🛠️ Setup and Installation
 
 ### Frontend (React App)
