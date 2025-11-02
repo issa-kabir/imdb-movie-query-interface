@@ -2,6 +2,10 @@ name = "compile-sql"
 main = "compile-sql.js"
 compatibility_date = "2025-10-26" # any recent date is fine
 
+services = [
+    { binding = "RETRIEVE", service = "retrieve"}
+]
+
 # Bind Cloudflare Workers AI (easiest path to start)
 [ai]
 binding = "AI"

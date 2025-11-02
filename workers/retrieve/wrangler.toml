@@ -1,0 +1,10 @@
+name = "retrieve"
+main = "retrieve.js"
+compatibility_date = "2025-11-01"
+
+[[vectorize]]
+binding = "VECTORIZE_INDEX"
+index_name = "imdb-movies-cards-index"
+
+[ai]
+binding = "AI"

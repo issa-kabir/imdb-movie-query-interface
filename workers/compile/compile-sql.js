@@ -1,5 +1,4 @@
-import { Schema } from "../frontend/src/resources/schema";
-import { snippets as snips } from "../scripts/snippets";
+import { Schema } from "../../frontend/src/resources/schema"
 
 // workers/compile-sql.js
 export default {
@@ -14,28 +13,44 @@ export default {
         }
 
         const schema = Schema;
-        const snippets = snips;
+        const question = url.searchParams.get("question");
+        const retrieveResponse = await env.RETRIEVE.fetch("https://internal/query", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ query: question })
+        });
+        if (!question) {
+            return new Response(JSON.stringify({ error: "Missing question" }), {
+                status: 400,
+                headers: { "Content-Type": "application/json" },
+            });
+        }
+        if (!schema) {
+            return new Response(JSON.stringify({ error: "Missing schema" }), {
+                status: 400,
+                headers: { "Content-Type": "application/json" },
+            });
+        }
+        if (!retrieveResponse) {
+            return new Response(JSON.stringify({ error: "Couldn't get snippets from /retrieve" }), {
+                status: 500,
+                headers: { "Content-Type": "application/json" },
+            });
+        }
 
         try {
-            const question = url.searchParams.get("question");
-            if (!question || !schema) {
-                return new Response(JSON.stringify({ error: "Missing question or schema" }), {
-                    status: 400,
-                    headers: { "Content-Type": "application/json" },
-                });
-            }
-
+            const snippets = await retrieveResponse.json();
             // Build a strict, helpful prompt
             const systemPrompt = `
             You are a SQL compiler for DuckDB. Return ONLY JSON of the form:
             { "sql": "<SELECT statement>", "reason": "<very short justification>" }
-
+            
             Context:
             - Schema (truth source): ${JSON.stringify(schema, null, 2)}
             - Table name is movies
             - Helpful snippets (may be empty):
-            ${snippets.map(s => `  - ${s.text}`).join("\n")}
-
+                ${JSON.stringify(snippets?.matches, null, 2)}
+            
             Rules:
             - Output must be a single SELECT query (no CTEs are fine, but still only SELECT).
             - ABSOLUTELY NO DDL/DML (no DROP/DELETE/UPDATE/INSERT/ALTER/CREATE).
